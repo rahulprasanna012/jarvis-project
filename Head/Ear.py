@@ -22,7 +22,8 @@ def detect_and_translate_text(recognizer, audio):
 
         # Translate Tamil to English
         translated_text = translate_if_needed(tamil_text, "ta")
-        print(Fore.LIGHTCYAN_EX + f"Translated to English: {translated_text}")
+        print(Fore.LIGHTCYAN_EX + f"You Said: {translated_text}")
+        return translated_text
 
     except sr.UnknownValueError:
         # If Tamil recognition fails, try English
@@ -32,11 +33,14 @@ def detect_and_translate_text(recognizer, audio):
             # No need to translate if it's already in English
             translated_text = translate_if_needed(english_text, "en")
             print(Fore.LIGHTCYAN_EX + f"Final Text: {translated_text}")
+            return translated_text
 
         except sr.UnknownValueError:
             print(Fore.RED + "Sorry, I could not understand the audio.")
+            return ""  # Return empty string if not understood
         except sr.RequestError as e:
             print(Fore.RED + f"Could not request results from Google Speech Recognition service; {e}")
+            return ""  # Return empty string on request error
 
 
 def listen():
@@ -61,20 +65,24 @@ def listen():
                 print(Fore.LIGHTGREEN_EX + "Got it, now recognizing...")
 
                 # Detect the spoken language and translate if needed
-                detect_and_translate_text(recognizer, audio)
+                result = detect_and_translate_text(recognizer, audio)
+
+                # Check result and handle cases where text is empty
+                if result:
+                    return result
+                else:
+                    print(Fore.RED + "No valid speech detected. Please try again.")
 
             except sr.WaitTimeoutError:
                 print(Fore.RED + "Listening timed out. Please try again.")
+                return ""
             except sr.RequestError as e:
                 print(Fore.RED + f"Could not request results from Google Speech Recognition service; {e}")
+                return ""
             except Exception as e:
                 print(Fore.RED + f"An error occurred: {e}")
+                return ""
 
             # Clear the terminal after each recognition attempt
             os.system('cls' if os.name == 'nt' else 'clear')
 
-
-# Main entry point
-if __name__ == "__main__":
-    # Start listening for speech input in the main thread
-    listen()

@@ -45,7 +45,7 @@ def play_audio(file_path):
 def speak(TEXT, output_file=None):
     if output_file is None:
         output_file = os.path.join(os.getcwd(), "output.wav")  # Correct output file path
+    print('Jarvis:',TEXT)
     asyncio.run(amain(TEXT, output_file))
 
-# Call the speak function
-speak("Welcome to the world of Jarvis")
+

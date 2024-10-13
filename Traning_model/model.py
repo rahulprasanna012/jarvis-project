@@ -52,15 +52,13 @@ def mind(text):
         dataset = load_dataset(dataset_path)
         vectorizer, X = train_tfidf_vectorizer(dataset)
         answer = get_answer(text, vectorizer, X, dataset)
-        speak(answer)  # Use the speak function to respond
+        speak(answer)
+        return answer
+        # Use the speak function to respond
     except FileNotFoundError as e:
         print(f"Error: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 # Input loop to keep receiving input
-while True:
-    user_input = input("You: ")
-    if user_input.lower() in ['exit', 'quit']:
-        break  # Stop the loop if the user wants to exit
-    mind(user_input)
+
